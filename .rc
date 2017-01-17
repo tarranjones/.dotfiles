@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+export USR_SRC="/usr/local/src";
+export GIT_ARCHIVE="$USR_SRC/git";
+export DOTFILES="$USR_SRC/dotfiles";
+
+# .rc.local
+[ -r "~/.rc.local" ] && [ -f "~/.rc.local" ] . "~/.rc.local"
+
+platform=""
+unamestr=`uname`
+if [[ "$unamestr" == 'Darwin' ]]; then
+   platform='macos'
+elif [[ "$unamestr" == 'Linux' ]]; then
+   platform='linux'
+fi
+
+#generic dotfiles
+for file in $DOTFILES/.{functions,path,env,exports,aliases,extra}; do
+
+	if [ -r "$file" ] && [ -f "$file" ]; then
+		# echo "$file sourced "
+		. "$file";
+	fi
+done;
+
+#platform specific dotfiles
+for file in $DOTFILES/.$platform.{functions,path,env,exports,aliases,extra}; do
+
+	if [ -r "$file" ] && [ -f "$file" ]; then
+		# echo "$file sourced "
+		. "$file";
+	fi
+done;
+
+#application dotfiles
+for file in $DOTFILES/*/.{functions,path,env,exports,aliases,extra}; do
+
+	if [ -r "$file" ] && [ -f "$file" ]; then
+		# echo "$file sourced "
+		. "$file";
+	fi
+
+done;
+
+#platform specific application dotfiles
+for file in $DOTFILES/*/.$platform.{functions,path,env,exports,aliases,extra}; do
+
+	if [ -r "$file" ] && [ -f "$file" ]; then
+		# echo "$file sourced "
+		. "$file";
+	fi
+done;
+
+#local overides
+for file in ~/.{functions,path,env,exports,aliases,extra}.local; do
+
+	if [ -r "$file" ] && [ -f "$file" ]; then
+
+		# echo "$file sourced "
+		. "$file";
+
+	fi
+done;
+
+# platform local overrides
+for file in ~/$platform.{functions,path,env,exports,aliases,extra}.local; do
+
+	if [ -r "$file" ] && [ -f "$file" ]; then
+		# echo "$file sourced "
+		. "$file";
+
+	fi
+done;
+# All files within a .name.d directory should be sourced from its parent "../.name"
+# shell specific files (.zsh, .bash, etc) are sourced from within the applications .dotfiles directory
+# any other .dotfile should be symlinked via the bootstrap.sh script or via an external source (tarranjones/setup)
