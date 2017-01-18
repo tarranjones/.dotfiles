@@ -15,34 +15,40 @@ unset unamestr
 rc_dirname="$(dirname "$0")"
 
 #generic dotfiles
-for file in $rc_dirname/.{env,functions,aliases}; do
+
+# .{env,functions,aliases} .env, .functions, .aliases
+# {.*,} support optional .prefix .myaliases.aliases or just .aliases (comma is important)
+# {.*,}.$platform{.*,} allow prefix to occur after or/and before $platform (.myaliases.macos.new.aliases)
+
+
+for file in $rc_dirname/{.*,}.{env,functions,aliases}; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
 #platform specific dotfiles
-for file in $rc_dirname/.$platform.{env,functions,aliases}; do
+for file in $rc_dirname/.$platform{.*,}.{env,functions,aliases}; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
 #application dotfiles
-for file in $rc_dirname/*/.{env,functions,aliases}; do
+for file in $rc_dirname/*/{.*,}.{env,functions,aliases}; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
 #platform specific application dotfiles
-for file in $rc_dirname/*/.$platform.{env,functions,aliases}; do
+for file in $rc_dirname/*/.$platform{.*,}.{env,functions,aliases}; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
 unset rc_dirname;
 
 #local overides
-for file in ~/.{env,functions,aliases}.local; do
+for file in ~/{.*,}.{env,functions,aliases}.local; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
 # platform local overrides
-for file in ~/$platform.{env,functions,aliases}.local; do
+for file in ~/{.*,}.$platform{.*,}.{env,functions,aliases}.local; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
