@@ -24,13 +24,19 @@ archive_repo(){
 
 appendtofile(){
 
-    filename=${!$#}
+    # filename=${!$#}
+    filename=${@:$#}
+
+    if ! [ -f  $filename ]; then
+      mkdir -p `dirname $filename`
+      touch $filename
+    fi
 
     for i in "$@"; do
 
         if ! [[ "$filename" = "$i" ]]; then
 
-            grep -q -F "$i" $filename || echo "$i" >> $filename
+            grep -q -F "$i" $filename || echo -e "$i" >> $filename
         fi
 
     done
@@ -40,8 +46,79 @@ include(){
 
   for file in "$@"; do
 
-    [ -r $file ] && [ -f $file ] && . $file
+
+    [ -r "$file" ] && [ -f "$file" ] && . "$file"
 
   done;
 
 }
+
+
+# source_child_dotfiles(){
+
+#   local caller_file="${BASH_SOURCE[1]}"
+
+#   echo $caller_file
+
+#   local bsname="$(basename -- $caller_file)";
+
+#   local drname="$(dirname $caller_file)";
+
+#   local ext=""
+
+#   if [ ! -z "$1" ]; then
+#     ext="$1"
+#   fi
+
+#   for file in $drname/${bsname}.d/.*$1; do
+
+#     if [ -r "$file" ] && [ -f "$file" ]; then
+#       # echo "$file sourced "
+#       . "$file";
+#     fi
+#   done;
+#   unset caller_file bsname drname file
+# }
+
+# source_dotfiles(){
+
+#   local caller_file="${BASH_SOURCE[1]}"
+
+#   echo $caller_file
+
+#   local bsname="$(basename -- $caller_file)";
+
+#   local drname="$(dirname $caller_file)";
+
+#   local script_dir=$( cd $drname && pwd )
+
+
+#   if [ -L "$caller_file" ]; then
+
+#     echo ""
+
+#     echo $(readlink -f "$caller_file")
+#   fi
+
+
+#   # local symlinkdir=$(dirname -- $(readlink -f "$caller_file"))
+
+
+
+#   # echo $symlinkdir
+
+
+#   if [ ! -z "$1" ]; then
+#     ext="$1"
+#   fi
+
+#   # for file in $drname/.*.$1; do
+
+
+#   #   # if [ -r "$file" ] && [ -f "$file" ]; then
+#   #   #   # echo "$file sourced "
+#   #   #   . "$file";
+#   #   # fi
+#   # done;
+#   unset caller_file bsname drname file
+# }
