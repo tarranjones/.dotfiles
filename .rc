@@ -20,23 +20,26 @@ rc_dirname="$(dirname "$0")"
 # {.*,} support optional .prefix .myaliases.aliases or just .aliases (comma is important)
 # {.*,}.$platform{.*,} allow prefix to occur after or/and before $platform (.myaliases.macos.new.aliases)
 
+for file in $rc_dirname/{,vendor/*/*/}{.*,}.{env,functions,aliases}; do
+  [ -r "$file" ] && [ -f "$file" ] && . "$file"
+done;
 
-for file in $rc_dirname/{.*,}.{env,functions,aliases}; do
+for file in $rc_dirname/{,vendor/*/*/}{.*,}.{env,functions,aliases}; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
 #platform specific dotfiles
-for file in $rc_dirname/.$platform{.*,}.{env,functions,aliases}; do
+for file in $rc_dirname/{,vendor/*/*/}.$platform{.*,}.{env,functions,aliases}; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
 #application dotfiles
-for file in $rc_dirname/*/{.*,}.{env,functions,aliases}; do
+for file in $rc_dirname/{,vendor/*/*/}*/{.*,}.{env,functions,aliases}; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
 #platform specific application dotfiles
-for file in $rc_dirname/*/.$platform{.*,}.{env,functions,aliases}; do
+for file in $rc_dirname/{,vendor/*/*/}*/.$platform{.*,}.{env,functions,aliases}; do
 	[ -r "$file" ] && [ -f "$file" ] && . "$file"
 done;
 
