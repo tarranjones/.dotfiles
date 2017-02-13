@@ -16,6 +16,8 @@ sudo rm -r $DOTFILES/*
 sudo ln -sf $DOTFILE_DIRNAME/.[^.]*  $DOTFILES/
 
 
+archive_repo github.com/trapd00r/LS_COLORS 
+
 composer require trapd00r/LS_COLORS
 # require_gist tarranjones/2847f07683735151c9c3f028035464e2
 

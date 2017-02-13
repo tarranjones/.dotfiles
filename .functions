@@ -10,7 +10,7 @@ archive_repo(){
   fi
 
   mkdir -p $GIT_ARCHIVE/$1
-  if ! git -C $GIT_ARCHIVE/$1 pull; then
+  if ! git -C $GIT_ARCHIVE/$1 pull 2>/dev/null ; then
     rm -rf $REPO_DIR
     git clone https://$1.git $GIT_ARCHIVE/$1
   fi
